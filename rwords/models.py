@@ -1,3 +1,4 @@
+# -*-coding:utf8-*-
 import enum
 
 from sqlalchemy import Column, Integer, String, DateTime,  Float, Enum

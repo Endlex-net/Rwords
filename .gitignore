@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod] *$py.class
+*.pyc
 
 # Distribution / packaging
 .Python
@@ -24,3 +25,7 @@ MANIFEST
 
 #IDE
 .idea/
+
+#Other File
+*.mp3
+*.db

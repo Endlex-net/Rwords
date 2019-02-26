@@ -1,3 +1,4 @@
+# -*-coding:utf8-*-
 import json
 import datetime
 import random
@@ -10,6 +11,7 @@ from rwords.models import Word, TranMean, Mp3, WordFactor, ReviewList, OptimumFa
 
 class WordStore:
     """WordStore"""
+
     def create(self, word_name, ph, tran_means, mp3_url, mp3_path, session=None):
         """create word in memory store"""
         with session_scope(session=session) as session:
@@ -66,8 +68,6 @@ class WordStore:
             word_info = dumps_alchemy(word_obj, ['mp3', 'tran_means'])
         return word_info
 
-
-
     def update_mp3(self, id=None, word=None, path=None, url=None, session=None):
         """Update mp3 Info"""
         kwargs = {}
@@ -88,7 +88,7 @@ class WordStore:
 class ReviewListStore:
     """ReviewList store"""
 
-    def add_word_in_list(self, word_id, new=False, repeat=False, repeat_count=1,  session=None):
+    def add_word_in_list(self, word_id, new=False, repeat=False, repeat_count=1, session=None):
         """Add new word to review list."""
         with session_scope(session=session) as session:
             if new:
@@ -169,7 +169,8 @@ class WordFactorStore:
         with session_scope(session=session) as session:
             word_factor = session.query(WordFactor).filter_by(word_id=word_id).first()
             session.query(OptimumFactorMatrix).filter_by(word_factor_id=word_factor.id).delete()
-            OF_objs = [OptimumFactorMatrix(word_factor_id=word_factor.id, number=item[0], OF=item[1]) for item in OF_matrix]
+            OF_objs = [OptimumFactorMatrix(word_factor_id=word_factor.id, number=item[0], OF=item[1]) for item in
+                       OF_matrix]
             session.add_all(OF_objs)
         return OF_matrix
 

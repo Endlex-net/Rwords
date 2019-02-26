@@ -1,9 +1,11 @@
+# -*-coding:utf8-*-
 from rwords.core.db import init_db
 from rwords.words import word_hander
 
 
 class Commands:
     """Rword Commands"""
+
     def __init__(self):
         init_db()
         word_hander.init_review_list()
@@ -42,4 +44,3 @@ def command_route(kw):
     elif kw.get('d') or kw.get('dashboard'):
         print("开发中")
         pass
-

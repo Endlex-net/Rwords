@@ -32,11 +32,13 @@ Options:
 
 from docopt import docopt
 from .commands import command_route
+from . import __version__
 
 
 def main():
-    kw = docopt(__doc__, version='Rewords 0.0.0.rc.103')
+    kw = docopt(__doc__, version=__version__)
     command_route(kw)
+
 
 if __name__ == '__main__':
     main()

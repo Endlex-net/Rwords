@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from rwords.words import word_hander
 from rwords.core.db import session_scope
 from rwords import models
