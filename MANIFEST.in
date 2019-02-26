@@ -1,0 +1,4 @@
+include README.md LICENSE pytest.ini requirements.txt
+recursive-include rwords/data/mp3/*.mp3
+recursive-include rwords/data/db/*.db
+recursive-include Doc/*
