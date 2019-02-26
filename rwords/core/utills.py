@@ -1,5 +1,8 @@
+# -*-coding: utf-8-*-
+import sys
 import datetime
 import json
+from contextlib import contextmanager
 
 import requests
 import readchar
@@ -67,3 +70,11 @@ def new_alchemy_encoder(revisit_self = False, fields_to_expand = []):
 def dumps_alchemy(c, args):
     """dumps sqlalchemy obj"""
     return json.loads(json.dumps(c, cls=new_alchemy_encoder(False, args), check_circular=False))
+
+@contextmanager
+def redirect_stdout(new_target):
+    old_target, sys.stdout = sys.stdout, new_target # replace sys.stdout
+    try:
+        yield new_target # run some code with the replaced stdout
+    finally:
+        sys.stdout = old_target # restore to the previous value

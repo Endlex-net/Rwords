@@ -1,4 +1,4 @@
-import pytest
+# -*- coding: utf-8 -*-
 from rwords.core.db import session_scope
 from rwords.models import *
 from rwords.store import word_store, review_list_store

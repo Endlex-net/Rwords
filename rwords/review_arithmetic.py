@@ -31,7 +31,9 @@ class LearnArithmetic():
         if n < 1:
             return self._get_OF(n, EF)
         else:
-            return self._get_OF(n, EF) * self._get_IF(*OF_matrix[n-1], OF_matrix)
+            _n = OF_matrix[n-1][0]
+            _EF = OF_matrix[n-1][1]
+            return self._get_OF(n, EF) * self._get_IF(_n, _EF, OF_matrix)
 
     def _get_OF(self, n, EF):
         """Return optimum factor"""

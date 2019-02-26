@@ -1,5 +1,5 @@
+# -*-coding: utf8 -*-
 import time
-import contextlib
 
 from rwords.core import utills, settings
 
@@ -21,8 +21,8 @@ class Returns:
 
     def question(self, question_msg, chars=''):
         """Return question to console and Return ret to q"""
-        hint = "({})".format('/'.join(chars)) if chars else ''
-        print('Q: {} {}'.format(question_msg, hint))
+        hint = u"({})".format(u'/'.join(chars)) if chars else ''
+        print(u'Q: {} {}'.format(question_msg, hint))
         q = utills.read_char(chars=chars)
         return q
 
@@ -31,7 +31,13 @@ class Returns:
         if not path:
             return False
         file_path = settings.BASE_DIR + path
-        with contextlib.redirect_stdout(None):
+
+        if settings.PYTHON_VERSION_3:  # compatibility py2
+            import io as _io
+        else:
+            import StringIO as _io
+
+        with utills.redirect_stdout(_io.StringIO()):
             import pygame
         pygame.mixer.init()
         pygame.mixer.music.load(file_path)
