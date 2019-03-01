@@ -56,7 +56,7 @@ class ConsoleHander:
         for word_info in word_infos:
             tran_means = word_info['tran_means']
             min_mean = json.loads(tran_means[0]['means'])[0]
-            min_mean = min_mean.split('，')[0]
+            min_mean = min_mean.split(u'，')[0]
             line = u"{id}\t{word_name}\t\t{means}\t\t{EF}\t{next_review_time}\t\t{create_time}".format(
                 id=word_info['id'],
                 word_name=word_info['word_name'],
