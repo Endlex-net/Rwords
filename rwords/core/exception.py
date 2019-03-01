@@ -15,3 +15,8 @@ class WordRepeatAddException(Exception):
 
 class LearnListEmptyException(Exception):
     """Today's learn list is empty"""
+    pass
+
+class IcibaConnectionError(Exception):
+    """Network connection error while calling Iciba-API"""
+    pass

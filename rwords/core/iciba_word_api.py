@@ -44,8 +44,7 @@ def get_word_info(word):
             "tran_means": tran_means,
             "mp3_url": mp3_url,
         }
-        return word_info
-    except Exception:
+    except Exception as exc:
         traceback.print_exc()
-        traceback.format_exc()
-        raise IcibaApiPasingException()
+        raise IcibaApiPasingException(str(exc))
+    return word_info

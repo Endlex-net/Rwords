@@ -1,6 +1,11 @@
 # -*-coding:utf8-*-
+import traceback
+
 from rwords.core.db import init_db
-from rwords.words import word_hander
+from rwords.words import word_hander, review_hander
+from rwords.console import console_hander
+from rwords.core import settings
+from rwords.core.exception import *
 
 
 class Commands:
@@ -10,37 +15,87 @@ class Commands:
         init_db()
         word_hander.init_review_list()
 
-    def add(self, words=[], file_paths=[]):
+    def add(self, words=None, file_paths=None):
         """add words to memory store"""
-        if file_paths:
-            words = []
-            for file_path in file_paths:
-                words += self._get_words_by_file_name(file_path)
+        try:
+            word_names = words if words else []
+            if file_paths:
+                word_names = self._get_words_by_file_name(file_paths)
 
-        word_hander.add_words(words)
+            errno, errmsg, data = word_hander.add_words(word_names)
+            if errno:
+                console_hander.warning(errmsg)
+                return None
 
-    def _get_words_by_file_name(self, file_path):
-        """Return words by file_name"""
-        with open(file_path, 'r') as f:
-            return [word.lstrip().replace('\n', '') for word in f.readlines()]
+            for warrning in data['warning_list']:
+                console_hander.warning(warrning)
+
+            if data['fail_list']:
+                console_hander.warning("Failed to add {}".format(data['fail_list']))
+
+            success_count = len(word_names) - len(data['fail_list'])
+            console_hander.msg("{} words have been added to memory store.".format(success_count))
+
+        except Exception as exc:
+            console_hander.error(str(exc))
+            if settings.DEBUG:
+                traceback.print_exc()
+            # TODO write log
+        return None
+
+    def _get_words_by_file_paths(self, file_paths):
+        """Return word_names by file_paths"""
+        word_names = []
+        for file_path in file_paths:
+            with open(file_path, 'r') as f:
+                lines = f.readlines()
+
+                def format_word(word): return word.strip().replace('\n', '')
+                word_names_of_lines = [format_word(word) for word in lines]
+                word_names.extend(word_names_of_lines)
+
+        return word_names
 
     def learn(self):
         """Learn(Review) a word from review list"""
-        errno, errmsg, _ = word_hander.learn_word()
-        if errno:
-            print(errmsg)
+        try:
+            word_info = word_hander.get_today_word_info()
+            score = console_hander.learn_word(word_info)
+            review_hander.review_a_word(word_info['id'], score)
 
+        except LearnListEmptyException:
+            console_hander.msg("Today's learn list is empty.")
 
-def command_route(kw):
-    commands = Commands()
+        except Exception as exc:
+            console_hander.error(str(exc))
+            if settings.DEBUG:
+                traceback.print_exc()
+            # TODO write log
+        return None
 
-    if kw.get("a") or kw.get('add'):
-        return commands.add(kw['<Word>'], kw['<WordsPath>'])
-    elif kw.get('l') or kw.get('learn'):
-        return commands.learn()
-    elif kw.get('r') or kw.get('review'):
-        print("开发中")
-        pass
-    elif kw.get('d') or kw.get('dashboard'):
-        print("开发中")
+    def review(self, page=None, offset=None):
+        """Review all words in memory store."""
+        page = int(page) if page else 1
+        offset = int(offset) if offset else 10
+        while True:
+            errno, errmsg, data = word_hander.review(page, offset)
+            page = data['page']
+            offset = data['offset']
+            chr = console_hander.review_words_page(data['word_infos'], data['page'], data['offset'], data['word_count'])
+            if chr == 'q':
+                break
+            elif chr == 'n':
+                page += 1
+            elif chr == 'p':
+                page -= 1
+            elif chr == 'v':
+                word_id = int(console_hander.input('Please enter the word id'))
+                word_info = word_hander.get_word(word_id)
+                console_hander.view_word_info(word_info)
+
+    def dashboard(self):
+        print("under construction")
+        # 记忆库容量，今日单词数量， 完成数量
+        # 单词熟练度比例
+        # 总的复习趋势
         pass

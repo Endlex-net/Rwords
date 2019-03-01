@@ -51,9 +51,31 @@ class TestWordStore:
         assert word_info['ph'] == mock_word_info['ph']
 
         with session_scope() as session:
-            session.query(Mp3).filter_by(word_id=word_id).delete()
-            session.query(ReviewList).filter_by(word_id=word_id).delete()
-            session.query(Word).filter_by(word_name=mock_word_info['word_name']).delete()
+            session.query(Mp3).delete()
+            session.query(ReviewList).delete()
+            session.query(Word).delete()
+
+    def test_get_words(self):
+        with session_scope() as session:
+            session.query(Word).filter_by(word_name=mock_info.word_info['word_name']).delete()
+
+        test_word_ids = []
+        for i in range(10):
+            word_id = word_store.create(
+                mock_info.word_info['word_name'] + str(i),
+                mock_info.word_info['ph'],
+                mock_info.word_info['tran_means'],
+                mock_info.word_info['mp3_url'],
+                '',
+            )
+            test_word_ids.append(word_id)
+        word_infos = word_store.get_words(ids=test_word_ids, start=2, end=6)
+        assert len(word_infos) == 4
+
+        with session_scope() as session:
+            session.query(Mp3).delete()
+            session.query(ReviewList).delete()
+            session.query(Word).delete()
 
     def test_update_mp3(self):
         mock_word_info = mock_info.word_info
@@ -75,9 +97,9 @@ class TestWordStore:
         assert word_store.get_word(id=word_id)['mp3']['url'] == mock_url
 
         with session_scope() as session:
-            session.query(Mp3).filter_by(word_id=word_id).delete()
-            session.query(ReviewList).filter_by(word_id=word_id).delete()
-            session.query(Word).filter_by(word_name=mock_word_info['word_name']).delete()
+            session.query(Mp3).delete()
+            session.query(ReviewList).delete()
+            session.query(Word).delete()
 
 
 class TestReviewListStore:
@@ -100,9 +122,9 @@ class TestReviewListStore:
             assert session.query(ReviewList).filter_by(word_id=word_id).first().repeat_count == 5
 
         with session_scope() as session:
-            session.query(Mp3).filter_by(word_id=word_id).delete()
-            session.query(ReviewList).filter_by(word_id=word_id).delete()
-            session.query(Word).filter_by(id=word_id).delete()
+            session.query(Mp3).delete()
+            session.query(ReviewList).delete()
+            session.query(Word).delete()
 
     def test_del_word_in_list(self):
         mock_word_info = mock_info.word_info
@@ -121,9 +143,9 @@ class TestReviewListStore:
         with session_scope() as session:
             assert session.query(ReviewList).filter_by(word_id=word_id).first() is None
 
-            session.query(Mp3).filter_by(word_id=word_id).delete()
-            session.query(ReviewList).filter_by(word_id=word_id).delete()
-            session.query(Word).filter_by(id=word_id).delete()
+            session.query(Mp3).delete()
+            session.query(ReviewList).delete()
+            session.query(Word).delete()
 
     def test_reduce_repeat_count(self):
         mock_word_info = mock_info.word_info
@@ -149,9 +171,9 @@ class TestReviewListStore:
         with session_scope() as session:
             assert session.query(ReviewList).filter_by(word_id=word_id).first() is None
 
-            session.query(Mp3).filter_by(word_id=word_id).delete()
-            session.query(ReviewList).filter_by(word_id=word_id).delete()
-            session.query(Word).filter_by(id=word_id).delete()
+            session.query(Mp3).delete()
+            session.query(ReviewList).delete()
+            session.query(Word).delete()
 
     def test_get_word_type(self):
         mock_word_info = mock_info.word_info
@@ -169,9 +191,9 @@ class TestReviewListStore:
         assert review_list_store.get_word_type(word_id) is ReviewList.WordType.review
 
         with session_scope() as session:
-            session.query(Mp3).filter_by(word_id=word_id).delete()
-            session.query(ReviewList).filter_by(word_id=word_id).delete()
-            session.query(Word).filter_by(id=word_id).delete()
+            session.query(Mp3).delete()
+            session.query(ReviewList).delete()
+            session.query(Word).delete()
 
 
 class TestWordFactorStore:

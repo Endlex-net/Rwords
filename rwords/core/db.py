@@ -25,9 +25,9 @@ def session_scope(session=None):
         try:
             yield session
             session.commit()
-        except:
+        except Exception as exc:
             session.rollback()
-            raise
+            raise exc
         finally:
             session.close()
 
