@@ -2,6 +2,7 @@
 import json
 import datetime
 import random
+from sqlalchemy import func
 
 from rwords.core.exception import *
 from rwords.core.db import Session, session_scope
@@ -16,7 +17,7 @@ class WordStore:
         """create word in memory store"""
         with session_scope(session=session) as session:
             if session.query(Word).filter_by(word_name=word_name).first():
-                raise WordRepeatAddException
+                raise WordRepeatAddException(word_name)
 
             # create word_obj
             tran_mean_objs = []
@@ -54,7 +55,7 @@ class WordStore:
         return word_obj_id
 
     def get_word(self, id=None, word=None, session=None):
-        """Return a Word obj """
+        """Return a word_info """
         with session_scope(session=session) as session:
             kwargs = {}
             if id:
@@ -65,8 +66,29 @@ class WordStore:
                 return None
 
             word_obj = session.query(Word).filter_by(**kwargs).first()
-            word_info = dumps_alchemy(word_obj, ['mp3', 'tran_means'])
+            word_info = dumps_alchemy(word_obj, ['mp3', 'tran_means', 'word_factor'])
         return word_info
+
+    def get_words(self, ids=None, start=None, end=None, session=None):
+        """Return word_infos"""
+        # TODO: unit test
+        with session_scope(session=session) as session:
+            query = session.query(Word)
+            if ids:
+                query = query.filter(Word.id.in_(ids))
+
+            if start or end:
+                query = query.slice(start, end)
+
+            word_objs = query.all()
+            word_infos = [dumps_alchemy(word_obj, ['mp3', 'tran_means', 'word_factor']) for word_obj in word_objs]
+        return word_infos
+
+    def get_words_count(self, session=None):
+        with session_scope(session=session) as session:
+            query = session.query(func.count(Word.id))
+            count = query.scalar()
+        return count
 
     def update_mp3(self, id=None, word=None, path=None, url=None, session=None):
         """Update mp3 Info"""

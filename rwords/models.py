@@ -62,7 +62,7 @@ class OptimumFactorMatrix(Base):
 
 
 class ReviewList(Base):
-    __tablename__ = "review list"
+    __tablename__ = "review_list"
 
     class WordType(enum.Enum):
         new = 0
@@ -77,6 +77,16 @@ class ReviewList(Base):
 
     def __repr__(self):
         return "<ReviewList({}:word={})>".format(self.id, self.word.word_name)
+
+
+class DateLog(Base):
+    __tablename__ = "date_log"
+    id = Column(Integer, primary_key=True)
+    review_list_count = Column(Integer, comment="计划复习列表单词数量")
+    new_list_count = Column(Integer, comment="新添单词数量")
+    review_success_count = Column(Integer, comment="复习通过数量")  # 4分通过
+    word_count = Column(Integer, comment="当前单词库容量")
+    create_time = Column(DateTime, server_default=func.now())
 
 
 class SysInfo(Base):
