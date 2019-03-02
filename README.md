@@ -43,12 +43,12 @@ You have successfully completed a review, Rwords has put the word on the review 
 ## Usage
 ```
 Rwords:
-    A command line tool to help you remember words more quickly.
+    A command line tool to help you remember words faster.
 
 Usage:
     rw (a | add) (<Word>... | -r <WordsPath>...)
     rw (l | learn)
-    rw (r | review) [-p <ReviewPage>] [-o <ReviewOffset>]
+    rw (r | review) [--p=<ReviewPage>] [--o=<ReviewOffset>]
     rw (d | dashboard)
     rw (-h | --help)
     rw --version
@@ -57,11 +57,12 @@ Arguments:
     Word            A word you want to learn.
     WordsPath       A file with words you want to learn.
     ReviewPage      A count of review page.
+    ReviewOffset    A count of item on a page.
 
 Command:
     a add           Add words(from files) in your memory store.
     l learn         Learn a word form memory store.
-    r review        Review the words in memory store.
+    r review        Review all words in memory store.
     d dashboard     Check out your study analysis results.
 
 Options:
