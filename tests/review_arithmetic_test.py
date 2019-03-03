@@ -18,3 +18,6 @@ class TestLearnArithmetic():
         def test_get_EF_by_first_score(self):
             assert learn_arithmetic.get_EF_by_first_score(5) == learn_arithmetic.MIN_EF
             assert learn_arithmetic.get_EF_by_first_score(0) == learn_arithmetic.MAX_EF
+
+    def test_get_EF_by_first_score(self):
+        assert abs(learn_arithmetic.get_EF_by_first_score(3) - 2.02) <0.001

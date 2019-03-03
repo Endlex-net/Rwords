@@ -3,7 +3,7 @@ import json
 import datetime
 
 from rwords.store import word_store, review_list_store, word_factor_store
-from rwords.models import Word, Mp3, WordFactor, ReviewList, OptimumFactorMatrix
+from rwords.models import Word, Mp3, WordFactor, ReviewList, OptimumFactorMatrix, TranMean
 from rwords.core.db import session_scope
 from tests import mock_info
 
@@ -77,6 +77,27 @@ class TestWordStore:
             session.query(ReviewList).delete()
             session.query(Word).delete()
 
+    def test_get_words_count(self):
+        with session_scope() as session:
+            session.query(Word).delete()
+
+        word_store.create(
+            mock_info.word_info['word_name'],
+            mock_info.word_info['ph'],
+            mock_info.word_info['tran_means'],
+            mock_info.word_info['mp3_url'],
+            '',
+        )
+        assert word_store.get_words_count() == 1
+
+        with session_scope() as session:
+            session.query(Mp3).delete()
+            session.query(TranMean).delete()
+            session.query(ReviewList).delete()
+            session.query(Word).delete()
+            session.query(WordFactor).delete()
+
+
     def test_update_mp3(self):
         mock_word_info = mock_info.word_info
         with session_scope() as session:
@@ -126,27 +147,6 @@ class TestReviewListStore:
             session.query(ReviewList).delete()
             session.query(Word).delete()
 
-    def test_del_word_in_list(self):
-        mock_word_info = mock_info.word_info
-        with session_scope() as session:
-            session.query(Word).filter_by(word_name=mock_word_info['word_name']).delete()
-            word_obj = Word(
-                word_name=mock_word_info['word_name'],
-                ph=mock_word_info['ph'],
-            )
-            session.add(word_obj)
-            session.flush()
-            word_id = word_obj.id
-
-        review_list_store.del_word_in_list(word_id)
-
-        with session_scope() as session:
-            assert session.query(ReviewList).filter_by(word_id=word_id).first() is None
-
-            session.query(Mp3).delete()
-            session.query(ReviewList).delete()
-            session.query(Word).delete()
-
     def test_reduce_repeat_count(self):
         mock_word_info = mock_info.word_info
         with session_scope() as session:
@@ -174,6 +174,43 @@ class TestReviewListStore:
             session.query(Mp3).delete()
             session.query(ReviewList).delete()
             session.query(Word).delete()
+
+    def test_del_word_in_list(self):
+        mock_word_info = mock_info.word_info
+        with session_scope() as session:
+            session.query(Word).filter_by(word_name=mock_word_info['word_name']).delete()
+            word_obj = Word(
+                word_name=mock_word_info['word_name'],
+                ph=mock_word_info['ph'],
+            )
+            session.add(word_obj)
+            session.flush()
+            word_id = word_obj.id
+
+        review_list_store.del_word_in_list(word_id)
+
+        with session_scope() as session:
+            assert session.query(ReviewList).filter_by(word_id=word_id).first() is None
+
+            session.query(Mp3).delete()
+            session.query(ReviewList).delete()
+            session.query(Word).delete()
+
+    def test_get_a_word_id(self):
+        word_id = word_store.create(
+            mock_info.word_info['word_name'],
+            mock_info.word_info['ph'],
+            mock_info.word_info['tran_means'],
+            mock_info.word_info['mp3_url'],
+            '',
+        )
+        assert isinstance(review_list_store.get_a_word_id(), int)
+
+        with session_scope() as session:
+            session.query(Mp3).delete()
+            session.query(ReviewList).delete()
+            session.query(Word).delete()
+            session.query(TranMean).delete()
 
     def test_get_word_type(self):
         mock_word_info = mock_info.word_info

@@ -18,13 +18,14 @@ class WordHander():
 
     def init_review_list(self):
         """put today' words need review in review list"""
+        # TODO unit test
         if sys_info_store.get_review_list_time() != datetime.datetime.now().strftime("%Y-%m-%d"):
             with session_scope() as session:
                 word_ids = word_factor_store.get_today_word_ids(session=session)
                 for word_id in word_ids:
                     review_list_store.add_word_in_list(word_id, session=session)
                 sys_info_store.set_review_list_time(session=session)
-            console_hander.msg("已添加{}个单词到今日学习计划")
+            console_hander.msg("已添加{}个单词到今日学习计划".format(len(word_ids)))
 
     def add_word(self, word_name):
         """add a word"""
@@ -69,6 +70,7 @@ class WordHander():
 
     def get_today_word_info(self):
         """Return a word_info from review list"""
+        # TODO unit test
         word_id = review_list_store.get_a_word_id()
         word_info = word_store.get_word(id=word_id)
         self._check_music_by_word_info(word_info)
@@ -99,6 +101,7 @@ class WordHander():
         return None
 
     def review(self, page, offset):
+        # TODO unit test
         """Review all words in memory store."""
         page = max(page, 1)
         offset = max(offset, 1)
