@@ -1,7 +1,7 @@
 import datetime
 
 
-class LearnArithmetic():
+class LearnArithmetic:
     """
     LearnArithmetic:
         SuperMemo 5
@@ -53,5 +53,5 @@ class LearnArithmetic():
         """Return EF by first score"""
         return (self.MAX_EF - self.MIN_EF) / 5 * score + self.MIN_EF
 
-learn_arithmetic = LearnArithmetic()
 
+learn_arithmetic = LearnArithmetic()

@@ -20,7 +20,7 @@ class Commands:
         try:
             word_names = words if words else []
             if file_paths:
-                word_names = self._get_words_by_file_name(file_paths)
+                word_names = self._get_words_by_file_paths(file_paths)
 
             errno, errmsg, data = word_hander.add_words(word_names)
             if errno:
