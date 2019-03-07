@@ -4,8 +4,8 @@ import datetime
 import random
 from sqlalchemy import func
 
-from rwords.core.exception import *
-from rwords.core.db import Session, session_scope
+from rwords.core import exception
+from rwords.core.db import session_scope
 from rwords.core.utills import dumps_alchemy
 from rwords.models import Word, TranMean, Mp3, WordFactor, ReviewList, OptimumFactorMatrix, SysInfo
 
@@ -17,7 +17,7 @@ class WordStore:
         """create word in memory store"""
         with session_scope(session=session) as session:
             if session.query(Word).filter_by(word_name=word_name).first():
-                raise WordRepeatAddException(word_name)
+                raise exception.WordRepeatAddException(word_name)
 
             # create word_obj
             tran_mean_objs = []
@@ -81,7 +81,8 @@ class WordStore:
                 query = query.slice(start, end)
 
             word_objs = query.all()
-            word_infos = [dumps_alchemy(word_obj, ['mp3', 'tran_means', 'word_factor']) for word_obj in word_objs]
+            expand_fields = ['mp3', 'tran_means', 'word_factor']
+            word_infos = [dumps_alchemy(word_obj, expand_fields) for word_obj in word_objs]
         return word_infos
 
     def get_words_count(self, session=None):
@@ -148,7 +149,7 @@ class ReviewListStore:
             learn_list = session.query(ReviewList).all()
 
             if not learn_list:
-                raise LearnListEmptyException
+                raise exception.LearnListEmptyException
 
             item = random.choice(learn_list)
             word_id = item.word_id
@@ -191,8 +192,14 @@ class WordFactorStore:
         with session_scope(session=session) as session:
             word_factor = session.query(WordFactor).filter_by(word_id=word_id).first()
             session.query(OptimumFactorMatrix).filter_by(word_factor_id=word_factor.id).delete()
-            OF_objs = [OptimumFactorMatrix(word_factor_id=word_factor.id, number=item[0], OF=item[1]) for item in
-                       OF_matrix]
+            OF_objs = []
+            for item in OF_matrix:
+                OF_objs.append(
+                    OptimumFactorMatrix(
+                        word_factor_id=word_factor.id,
+                        number=item[0],
+                        OF=item[1])
+                )
             session.add_all(OF_objs)
         return OF_matrix
 

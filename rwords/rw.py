@@ -53,6 +53,9 @@ def command_route(kw):
         return commands.review(kw['--p'], kw['--o'])
     elif kw.get('d') or kw.get('dashboard'):
         return commands.dashboard()
+    else:
+        str_keys = ', '.join([key for key in kw.keys() if kw[key]])
+        raise ValueError(", ".join(str_keys))
 
 
 if __name__ == '__main__':
