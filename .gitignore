@@ -23,9 +23,12 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-#IDE
+# IDE
 .idea/
 
-#Other File
+# pytest
+.coverage
+
+# Other File
 *.mp3
 *.db

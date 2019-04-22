@@ -31,6 +31,7 @@ class TestWordStore:
             session.query(Mp3).filter_by(word_id=word_id).delete()
             session.query(ReviewList).filter_by(word_id=word_id).delete()
             session.delete(word_obj)
+            session.query(OptimumFactorMatrix).delete()
 
     def test_get_word(self):
         mock_word_info = mock_info.word_info
@@ -54,6 +55,7 @@ class TestWordStore:
             session.query(Mp3).delete()
             session.query(ReviewList).delete()
             session.query(Word).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_get_words(self):
         with session_scope() as session:
@@ -76,6 +78,7 @@ class TestWordStore:
             session.query(Mp3).delete()
             session.query(ReviewList).delete()
             session.query(Word).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_get_words_count(self):
         with session_scope() as session:
@@ -96,6 +99,7 @@ class TestWordStore:
             session.query(ReviewList).delete()
             session.query(Word).delete()
             session.query(WordFactor).delete()
+            session.query(OptimumFactorMatrix).delete()
 
 
     def test_update_mp3(self):
@@ -121,6 +125,7 @@ class TestWordStore:
             session.query(Mp3).delete()
             session.query(ReviewList).delete()
             session.query(Word).delete()
+            session.query(OptimumFactorMatrix).delete()
 
 
 class TestReviewListStore:
@@ -146,6 +151,7 @@ class TestReviewListStore:
             session.query(Mp3).delete()
             session.query(ReviewList).delete()
             session.query(Word).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_reduce_repeat_count(self):
         mock_word_info = mock_info.word_info
@@ -174,6 +180,7 @@ class TestReviewListStore:
             session.query(Mp3).delete()
             session.query(ReviewList).delete()
             session.query(Word).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_del_word_in_list(self):
         mock_word_info = mock_info.word_info
@@ -195,6 +202,7 @@ class TestReviewListStore:
             session.query(Mp3).delete()
             session.query(ReviewList).delete()
             session.query(Word).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_get_a_word_id(self):
         word_id = word_store.create(
@@ -211,6 +219,7 @@ class TestReviewListStore:
             session.query(ReviewList).delete()
             session.query(Word).delete()
             session.query(TranMean).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_get_word_type(self):
         mock_word_info = mock_info.word_info
@@ -231,6 +240,7 @@ class TestReviewListStore:
             session.query(Mp3).delete()
             session.query(ReviewList).delete()
             session.query(Word).delete()
+            session.query(OptimumFactorMatrix).delete()
 
 
 class TestWordFactorStore:
@@ -260,7 +270,7 @@ class TestWordFactorStore:
             session.query(Mp3).filter_by(word_id=word_id).delete()
             session.query(ReviewList).filter_by(word_id=word_id).delete()
             session.query(Word).filter_by(id=word_id).delete()
-            session.query(OptimumFactorMatrix).filter_by(word_factor_id=word_factor_id).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_get_EF(self):
         mock_word_info = mock_info.word_info
@@ -280,6 +290,7 @@ class TestWordFactorStore:
             session.query(Mp3).filter_by(word_id=word_id).delete()
             session.query(ReviewList).filter_by(word_id=word_id).delete()
             session.query(Word).filter_by(id=word_id).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_set_EF(self):
         mock_word_info = mock_info.word_info
@@ -300,6 +311,7 @@ class TestWordFactorStore:
             session.query(Mp3).filter_by(word_id=word_id).delete()
             session.query(ReviewList).filter_by(word_id=word_id).delete()
             session.query(Word).filter_by(id=word_id).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_set_OF_matrix(self):
         mock_word_info = mock_info.word_info
@@ -320,6 +332,7 @@ class TestWordFactorStore:
             session.query(Mp3).filter_by(word_id=word_id).delete()
             session.query(ReviewList).filter_by(word_id=word_id).delete()
             session.query(Word).filter_by(id=word_id).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_set_next_review_time(self):
         with session_scope() as session:
@@ -340,6 +353,7 @@ class TestWordFactorStore:
             session.query(Mp3).filter_by(word_id=word_id).delete()
             session.query(ReviewList).filter_by(word_id=word_id).delete()
             session.query(Word).filter_by(id=word_id).delete()
+            session.query(OptimumFactorMatrix).delete()
 
     def test_get_today_word_ids(self):
         with session_scope() as session:
@@ -362,4 +376,5 @@ class TestWordFactorStore:
             session.query(ReviewList).filter_by(word_id=word_id).delete()
             session.query(WordFactor).filter_by(word_id=word_id).delete()
             session.query(Word).filter_by(id=word_id).delete()
+            session.query(OptimumFactorMatrix).delete()
 
